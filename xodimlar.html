@@ -1,0 +1,452 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xodimlar Bo'limi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #444;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #f5f5f5;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #222;
+            color: #f5f5f5;
+        }
+
+        .form-group button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #555;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #555;
+        }
+
+        .actions button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .actions button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Xodimlar Bo'limi</h1>
+        <div class="form-group">
+            <label for="name">Xodim Ismi</label>
+            <input type="text" id="name" placeholder="Xodim ismini kiriting">
+        </div>
+        <div class="form-group">
+            <label for="phone">Telefon Raqami</label>
+            <input type="text" id="phone" placeholder="Telefon raqamini kiriting">
+        </div>
+        <div class="form-group">
+            <label for="role">Xodim Roli</label>
+            <select id="role">
+                <option value="">Rolni tanlang</option>
+                <option value="admin">Admin</option>
+                <option value="menedjer">Menedjer</option>
+                <option value="ofitsiant">Ofitsiant</option>
+                <option value="oshpaz">Oshpaz</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button id="addEmployee">Qo'shish</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ism</th>
+                    <th>Telefon</th>
+                    <th>Rol</th>
+                    <th>Harakat</th>
+                </tr>
+            </thead>
+            <tbody id="employeeList">
+                <!-- Xodimlar ro'yxati shu yerga qo'shiladi -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const addEmployeeBtn = document.getElementById('addEmployee');
+        const nameInput = document.getElementById('name');
+        const phoneInput = document.getElementById('phone');
+        const roleSelect = document.getElementById('role');
+        const employeeList = document.getElementById('employeeList');
+
+        let employeeCount = 0;
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+
+        function renderEmployees() {
+            employeeList.innerHTML = '';
+            employees.forEach((employee, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.phone}</td>
+                    <td>${employee.role}</td>
+                    <td class="actions">
+                        <button onclick="editEmployee(${index})">Tahrirlash</button>
+                    </td>
+                `;
+                employeeList.appendChild(row);
+            });
+        }
+
+        function saveEmployees() {
+            localStorage.setItem('employees', JSON.stringify(employees));
+        }
+
+        addEmployeeBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+            const role = roleSelect.value;
+
+            if (!name || !phone || !role) {
+                alert('Iltimos, barcha maydonlarni toldiring!');
+                return;
+            }
+
+            employees.push({ name, phone, role });
+            saveEmployees();
+            renderEmployees();
+
+            // Maydonlarni tozalash
+            nameInput.value = '';
+            phoneInput.value = '';
+            roleSelect.value = '';
+        });
+
+        function editEmployee(index) {
+            const employee = employees[index];
+            nameInput.value = employee.name;
+            phoneInput.value = employee.phone;
+            roleSelect.value = employee.role;
+
+            employees.splice(index, 1);
+            saveEmployees();
+            renderEmployees();
+        }
+
+        // Sahifa yuklanganda xodimlarni ko'rsatish
+        renderEmployees();
+    </script>
+
+    <!-- // Har bir fayl oxiriga qo'shish kerak -->
+    <script>
+        // Sahifa yangilanganda ma'lumotlarni yuklash
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof loadData === 'function') {
+                loadData();
+            }
+        });
+
+        // Ma'lumotlarni saqlash funktsiyasi (har bir fayl uchun moslashtirilgan)
+        function saveData() {
+            // Har bir fayl uchun o'ziga xos saqlash logikasi
+            // Masalan, kassa.html uchun:
+            // localStorage.setItem('orders', JSON.stringify(orders));
+        }
+    </script>
+</body>
+
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xodimlar Bo'limi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #444;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #f5f5f5;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: #222;
+            color: #f5f5f5;
+        }
+
+        .form-group button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #555;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #555;
+        }
+
+        .actions button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .actions button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Xodimlar Bo'limi</h1>
+        <div class="form-group">
+            <label for="name">Xodim Ismi</label>
+            <input type="text" id="name" placeholder="Xodim ismini kiriting">
+        </div>
+        <div class="form-group">
+            <label for="phone">Telefon Raqami</label>
+            <input type="text" id="phone" placeholder="Telefon raqamini kiriting">
+        </div>
+        <div class="form-group">
+            <label for="role">Xodim Roli</label>
+            <select id="role">
+                <option value="">Rolni tanlang</option>
+                <option value="admin">Admin</option>
+                <option value="menedjer">Menedjer</option>
+                <option value="ofitsiant">Ofitsiant</option>
+                <option value="oshpaz">Oshpaz</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button id="addEmployee">Qo'shish</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ism</th>
+                    <th>Telefon</th>
+                    <th>Rol</th>
+                    <th>Harakat</th>
+                </tr>
+            </thead>
+            <tbody id="employeeList">
+                <!-- Xodimlar ro'yxati shu yerga qo'shiladi -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const addEmployeeBtn = document.getElementById('addEmployee');
+        const nameInput = document.getElementById('name');
+        const phoneInput = document.getElementById('phone');
+        const roleSelect = document.getElementById('role');
+        const employeeList = document.getElementById('employeeList');
+
+        let employeeCount = 0;
+        let employees = JSON.parse(localStorage.getItem('employees')) || [];
+
+        function renderEmployees() {
+            employeeList.innerHTML = '';
+            employees.forEach((employee, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.phone}</td>
+                    <td>${employee.role}</td>
+                    <td class="actions">
+                        <button onclick="editEmployee(${index})">Tahrirlash</button>
+                    </td>
+                `;
+                employeeList.appendChild(row);
+            });
+        }
+
+        function saveEmployees() {
+            localStorage.setItem('employees', JSON.stringify(employees));
+        }
+
+        addEmployeeBtn.addEventListener('click', () => {
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+            const role = roleSelect.value;
+
+            if (!name || !phone || !role) {
+                alert('Iltimos, barcha maydonlarni toldiring!');
+                return;
+            }
+
+            employees.push({ name, phone, role });
+            saveEmployees();
+            renderEmployees();
+
+            // Maydonlarni tozalash
+            nameInput.value = '';
+            phoneInput.value = '';
+            roleSelect.value = '';
+        });
+
+        function editEmployee(index) {
+            const employee = employees[index];
+            nameInput.value = employee.name;
+            phoneInput.value = employee.phone;
+            roleSelect.value = employee.role;
+
+            employees.splice(index, 1);
+            saveEmployees();
+            renderEmployees();
+        }
+
+        // Sahifa yuklanganda xodimlarni ko'rsatish
+        renderEmployees();
+    </script>
+
+    <!-- // Har bir fayl oxiriga qo'shish kerak -->
+    <script>
+        // Sahifa yangilanganda ma'lumotlarni yuklash
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof loadData === 'function') {
+                loadData();
+            }
+        });
+
+        // Ma'lumotlarni saqlash funktsiyasi (har bir fayl uchun moslashtirilgan)
+        function saveData() {
+            // Har bir fayl uchun o'ziga xos saqlash logikasi
+            // Masalan, kassa.html uchun:
+            // localStorage.setItem('orders', JSON.stringify(orders));
+        }
+    </script>
+</body>
+
+>>>>>>> 878f8ff3854408d9ae5ebeae7fef7628951cfb3f
+</html>
